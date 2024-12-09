@@ -1,0 +1,37 @@
+
+
+.text-primary {
+    color: #0E225C !important; /* Replace orange with black or another color */
+}
+
+
+
+
+
+
+
+#sideNav {
+    background-color: #0E225C !important; /* Dark blue */
+    color: #ffffff; /* Default text color for the sidebar */
+}
+
+#sideNav .nav-link {
+    color: #ffffff !important; /* Sidebar link text color */
+}
+
+#sideNav .nav-link:hover {
+    color: #6e7a9d !important; /* Hover effect color for links */
+}
+
+
+
+
+
+
+.subheading a {
+    color: #0E225C !important; /* Change email text color */
+}
+
+.subheading a:hover {
+    color: #6e7a9d !important; /* Change email hover color */
+}

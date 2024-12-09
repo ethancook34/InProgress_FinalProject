@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Bird Game - Winter Edition</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      background: linear-gradient(to bottom, #87CEEB, #FFFFFF); /* Sky blue to white gradient for a winter sky */
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: red;
+      font-size: 24px;
+      text-shadow: 2px 2px 2px black;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Score: 0</div>
+  <canvas id="gameCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bird, pipes, score, gameRunning, snow, pipeSpeed, basePipeInterval;
+    let pipeCooldown = 0;
+
+    function initGame() {
+      bird = {
+        x: 50,
+        y: canvas.height / 2,
+        radius: 15, // Radius for the red dot
+        gravity: 0.2, // Smooth downward movement
+        lift: -8, // Smooth upward movement
+        velocity: 0
+      };
+
+      pipes = [];
+      snow = canvas.height - 20; // Snow layer at the bottom
+      score = 0;
+      gameRunning = true;
+      pipeSpeed = 5; // Initial pipe speed
+      basePipeInterval = 4000; // Base interval for pipes
+      pipeCooldown = 0;
+
+      document.getElementById('score').textContent = `Score: ${score}`;
+      gameLoop();
+    }
+
+    function drawBird() {
+      // Draw simple red dot
+      ctx.fillStyle = 'red';
+      ctx.beginPath();
+      ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function createPipe() {
+      const gap = 300; // Slightly smaller gap for more challenge
+      const topHeight = Math.random() * (canvas.height / 2);
+      pipes.push({
+        x: canvas.width,
+        width: 70,
+        topHeight: topHeight,
+        bottomY: topHeight + gap,
+        scored: false // Mark if pipe is scored
+      });
+    }
+
+    function drawPipes() {
+      ctx.fillStyle = 'green'; // Green pipes
+      pipes.forEach(pipe => {
+        // Draw top pipe
+        ctx.fillRect(pipe.x, 0, pipe.width, pipe.topHeight);
+
+        // Draw bottom pipe
+        ctx.fillRect(pipe.x, pipe.bottomY, pipe.width, canvas.height - pipe.bottomY);
+      });
+    }
+
+    function updatePipes() {
+      pipes = pipes.filter(pipe => pipe.x + pipe.width > 0); // Remove pipes off-screen
+      pipes.forEach(pipe => (pipe.x -= pipeSpeed)); // Move pipes based on dynamic speed
+
+      if (pipeCooldown <= 0) {
+        createPipe();
+        pipeCooldown = basePipeInterval;
+      } else {
+        pipeCooldown -= 16; // Countdown to next pipe
+      }
+    }
+
+    function checkCollision() {
+      for (let pipe of pipes) {
+        if (
+          bird.x + bird.radius > pipe.x &&
+          bird.x - bird.radius < pipe.x + pipe.width &&
+          (bird.y - bird.radius < pipe.topHeight || bird.y + bird.radius > pipe.bottomY)
+        ) {
+          gameRunning = false;
+        }
+      }
+
+      if (bird.y + bird.radius > canvas.height || bird.y - bird.radius < 0) {
+        gameRunning = false;
+      }
+    }
+
+    function drawSnow() {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, snow, canvas.width, 20); // Snow layer at the bottom
+    }
+
+    function gameLoop() {
+      if (!gameRunning) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.font = '48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Game Over! Score: ${score}`, canvas.width / 2, canvas.height / 2);
+        ctx.font = '24px Arial';
+        ctx.fillText(`Press Space to Restart`, canvas.width / 2, canvas.height / 2 + 50);
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      bird.velocity += bird.gravity;
+      bird.y += bird.velocity;
+
+      drawBird();
+      drawPipes();
+      drawSnow();
+      updatePipes();
+      checkCollision();
+
+      if (pipes.length && bird.x > pipes[0].x + pipes[0].width && !pipes[0].scored) {
+        score++;
+        pipes[0].scored = true;
+        document.getElementById('score').textContent = `Score: ${score}`;
+
+        // Increase speed every time the score is a multiple of 5
+        if (score % 5 === 0) {
+          pipeSpeed += 1; // Increase pipe speed
+          basePipeInterval = Math.max(2000, basePipeInterval - 200); // Decrease pipe interval but keep it reasonable
+        }
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Handle user input
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        if (!gameRunning) {
+          initGame(); // Restart the game if space is pressed after losing
+        } else {
+          bird.velocity = bird.lift;
+        }
+      }
+    });
+
+    // Start the game
+    initGame();
+  </script>
+</body>
+</html>
