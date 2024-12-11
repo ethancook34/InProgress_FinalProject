@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/customcss.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+        <a href="../index.html">Resume</a>
+        <a href="../html/aiWebApp.html">Game</a>
+        <a href="tableau.html">Tableau</a>
+        <a href="../html/scratch.html">Carter Field</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header style="text-align: center; margin-bottom: 20px;">
+            <h1>Flight Delays</h1>
+        </header>
+
+        <div class="chart-container">
+            <div class='tableauPlaceholder' id='viz1733909232281' style='position: relative; width: 80%; max-width: 900px; margin: 0 auto;'>
+                <noscript>
+                    <a href='#'>
+                        <img alt='Story 1' src='https://public.tableau.com/static/images/Ex/ExploreAirlineDataFINALSueGrist2017-06-05/Story1/1_rss.png' style='border: none' />
+                    </a>
+                </noscript>
+                <object class='tableauViz' style='display:block; margin: auto;'>
+                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                    <param name='embed_code_version' value='3' />
+                    <param name='site_root' value='' />
+                    <param name='name' value='ExploreAirlineDataFINALSueGrist2017-06-05/Story1' />
+                    <param name='tabs' value='no' />
+                    <param name='toolbar' value='yes' />
+                    <param name='static_image' value='https://public.tableau.com/static/images/Ex/ExploreAirlineDataFINALSueGrist2017-06-05/Story1/1.png' />
+                    <param name='animate_transition' value='yes' />
+                    <param name='display_static_image' value='yes' />
+                    <param name='display_spinner' value='yes' />
+                    <param name='display_overlay' value='yes' />
+                    <param name='display_count' value='yes' />
+                    <param name='language' value='en-US' />
+                </object>
+            </div>
+        </div>
+
+        <script type='text/javascript'>
+            // Tableau JavaScript API
+            var divElement = document.getElementById('viz1733909232281');
+            var vizElement = divElement.getElementsByTagName('object')[0];
+
+            vizElement.style.width = '900px'; // Keep vizElement size
+            vizElement.style.height = '700px';
+
+            // Adjust internal chart scaling
+            var scriptElement = document.createElement('script');
+            scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+            scriptElement.onload = function () {
+                // Wait until the Tableau API is loaded
+                var tableauViz = new tableau.Viz(vizElement, 'https://public.tableau.com/views/ExploreAirlineDataFINALSueGrist2017-06-05/Story1', {
+                    width: '100%',
+                    height: '600px',
+                    device: 'desktop',
+                    hideTabs: true,
+                    hideToolbar: false,
+                    scale: 0.9 // Reduce internal scaling to make the chart smaller
+                });
+            };
+
+            vizElement.parentNode.insertBefore(scriptElement, vizElement);
+        </script>
+    </div>
+</body>
+
+</html>
